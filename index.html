@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#0a0a0a">
+    <title>Pro Video Editor - Social Media Ratios</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <span class="logo-icon">🎬</span>
+                <span class="logo-text">VidCut Pro</span>
+            </div>
+            <button class="upload-btn-header" id="uploadBtnHeader">
+                📤 Upload
+            </button>
+        </header>
+
+        <!-- Aspect Ratio Bar -->
+        <div class="ratio-bar">
+            <button class="ratio-btn" data-ratio="16/9">16:9</button>
+            <button class="ratio-btn" data-ratio="9/16">9:16</button>
+            <button class="ratio-btn" data-ratio="1/1">1:1</button>
+            <button class="ratio-btn" data-ratio="4/5">4:5</button>
+            <button class="ratio-btn" data-ratio="21/9">21:9</button>
+        </div>
+
+        <!-- Video Preview Container (Dynamic Aspect Ratio) -->
+        <div class="preview-wrapper" id="previewWrapper">
+            <div class="preview-container" id="previewContainer">
+                <!-- Upload Placeholder -->
+                <div class="upload-placeholder" id="uploadPlaceholder">
+                    <div class="placeholder-icon">🎥</div>
+                    <h3>Upload Your Video</h3>
+                    <p>MP4, MOV, or WebM</p>
+                    <button class="upload-primary-btn" id="uploadPrimaryBtn">
+                        + Select Video
+                    </button>
+                </div>
+
+                <!-- Video Player -->
+                <div class="video-wrapper" id="videoWrapper" style="display: none;">
+                    <video id="videoPlayer" class="video-player" controls></video>
+                    <canvas id="textOverlayCanvas" class="text-overlay-canvas"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Trim Handles Bar -->
+        <div class="trim-bar">
+            <div class="trim-label">
+                <span>🎚️ Trim</span>
+                <div class="trim-values">
+                    <span id="trimStartDisplay">0.0s</span>
+                    <span>—</span>
+                    <span id="trimEndDisplay">0.0s</span>
+                </div>
+            </div>
+            <div class="trim-slider-container">
+                <input type="range" id="trimStart" class="trim-slider start" min="0" max="100" value="0">
+                <input type="range" id="trimEnd" class="trim-slider end" min="0" max="100" value="100">
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav" id="bottomNav">
+            <button class="nav-item active" data-panel="edit">
+                <span class="nav-icon">✂️</span>
+                <span class="nav-label">Edit</span>
+            </button>
+            <button class="nav-item" data-panel="filters">
+                <span class="nav-icon">🎨</span>
+                <span class="nav-label">Filters</span>
+            </button>
+            <button class="nav-item" data-panel="text">
+                <span class="nav-icon">📝</span>
+                <span class="nav-label">Text</span>
+            </button>
+            <button class="nav-item" data-panel="export">
+                <span class="nav-icon">💾</span>
+                <span class="nav-label">Export</span>
+            </button>
+        </nav>
+
+        <!-- Dynamic Panel -->
+        <div class="panel" id="activePanel">
+            <!-- Edit Panel -->
+            <div id="editPanel" class="panel-content">
+                <h3 class="panel-title">🎚️ Adjustments</h3>
+                
+                <div class="control-group">
+                    <div class="control-header">
+                        <label>Brightness</label>
+                        <span class="control-value" id="brightnessValue">100%</span>
+                    </div>
+                    <input type="range" id="brightness" class="slider" min="0" max="200" value="100">
+                </div>
+
+                <div class="control-group">
+                    <div class="control-header">
+                        <label>Contrast</label>
+                        <span class="control-value" id="contrastValue">100%</span>
+                    </div>
+                    <input type="range" id="contrast" class="slider" min="0" max="200" value="100">
+                </div>
+
+                <div class="control-group">
+                    <div class="control-header">
+                        <label>Saturation</label>
+                        <span class="control-value" id="saturationValue">100%</span>
+                    </div>
+                    <input type="range" id="saturation" class="slider" min="0" max="200" value="100">
+                </div>
+
+                <div class="control-group">
+                    <div class="control-header">
+                        <label>Volume</label>
+                        <span class="control-value" id="volumeValue">100%</span>
+                    </div>
+                    <input type="range" id="volume" class="slider" min="0" max="100" value="100">
+                </div>
+
+                <div class="control-group">
+                    <div class="control-header">
+                        <label>Speed</label>
+                        <span class="control-value" id="speedValue">1x</span>
+                    </div>
+                    <input type="range" id="speed" class="slider" min="0.25" max="3" step="0.05" value="1">
+                </div>
+
+                <div class="timeline-info">
+                    <span>⏱️ <span id="currentTime">0.0</span>s</span>
+                    <span>🎬 <span id="duration">0.0</span>s</span>
+                </div>
+            </div>
+
+            <!-- Filters Panel -->
+            <div id="filtersPanel" class="panel-content" style="display: none;">
+                <h3 class="panel-title">✨ Filters</h3>
+                <div class="filter-grid" id="filterGrid"></div>
+            </div>
+
+            <!-- Text Panel -->
+            <div id="textPanel" class="panel-content" style="display: none;">
+                <h3 class="panel-title">📝 Text Overlay</h3>
+                <input type="text" id="textInput" class="text-input" placeholder="Enter your text..." value="Hello!">
+                <div class="text-button-group">
+                    <button id="applyTextBtn" class="btn-primary">Apply Text</button>
+                    <button id="removeTextBtn" class="btn-secondary">Remove</button>
+                </div>
+            </div>
+
+            <!-- Export Panel -->
+            <div id="exportPanel" class="panel-content" style="display: none;">
+                <h3 class="panel-title">📤 Export Video</h3>
+                <div class="export-info">
+                    <p>Aspect Ratio: <strong id="selectedRatioLabel">16:9</strong></p>
+                    <p>Resolution: <strong id="resolutionLabel">1920x1080</strong></p>
+                </div>
+                <button id="exportBtn" class="btn-export">Export with FFmpeg</button>
+                <div id="exportStatus" class="export-status"></div>
+                <div class="export-note">⚠️ First export downloads FFmpeg (~25MB)</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.6/dist/umd/ffmpeg.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
